@@ -1,0 +1,7 @@
+# If Zookeeper config is optional
+spring:
+ config:
+   import: "optional:zookeeper:"
+
+server:
+  port : 6060
