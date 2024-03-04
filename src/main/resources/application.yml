@@ -2,6 +2,21 @@
 spring:
  config:
    import: "optional:zookeeper:"
+ kafka:
+   streams:
+     application-id: my-kafka-streams-app
+   bootstrap-servers: localhost:9092
+   consumer:
+     bootstrap-servers: localhost:9092
+     group-id: event_processor
+     auto-offset-reset: earliest
+     key-deserializer: org.apache.kafka.common.serialization.Serdes$StringSerde
+     value-deserializer: org.apache.kafka.common.serialization.Serdes$StringSerde
+   producer:
+     bootstrap-servers: localhost:9092
+     key-serializer: org.apache.kafka.common.serialization.Serdes$StringSerde
+     value-serializer: org.apache.kafka.common.serialization.Serdes$StringSerde
+
 
 server:
   port : 6060
