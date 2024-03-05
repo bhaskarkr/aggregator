@@ -1,5 +1,6 @@
 package com.catalog.aggregator.configs;
 
+import com.catalog.aggregator.utils.EventUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.utils.Bytes;
@@ -12,6 +13,9 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+
+import static com.catalog.aggregator.utils.Constants.PRODUCT_USER_CLICK_ANALYTIC_OUTPUT_TOPIC;
+import static com.catalog.aggregator.utils.Constants.PRODUCT_USER_CLICK_TOPIC;
 
 @Component
 @Slf4j
@@ -27,8 +31,7 @@ public class UserClickProcessor {
 
     @Autowired
     public KStream<String, String> kStream(@Qualifier("defaultKafkaStreamsBuilder") StreamsBuilder builder) {
-        KStream<String, String> clicks = builder.stream("userClick");
-        clicks.foreach((key, value) -> log.info("Key#####: " + key + ", Value####: " + value));
+        KStream<String, String> clicks = builder.stream(PRODUCT_USER_CLICK_TOPIC);
         KTable<Windowed<String>, Long> clickCounts = clicks
                 .groupByKey()
                 .windowedBy(TimeWindows.of(Duration.ofSeconds(5)))
@@ -37,11 +40,10 @@ public class UserClickProcessor {
                         .withValueSerde(Serdes.Long()));
         clickCounts.toStream().foreach((key, value) -> {
             if (value >= 5) {
-                // Construct the message you want to send
-                log.info("Found 5 times");
-                String message = "User " + key.key() + " clicked 5 times in the last 5 minutes.";
-                // Publish to the new topic
-                kafkaTemplate.send("userClick-stores", key.key(), message);
+                String userId = EventUtils.getUserIdFromEventKey(key.key());
+                String productId = EventUtils.getProductIdFromEventKey(key.key());
+                String message = "User " + userId + " clicked 5 times on product "+ productId+ " in the last 5 seconds.";
+                kafkaTemplate.send(PRODUCT_USER_CLICK_ANALYTIC_OUTPUT_TOPIC, key.key(), message);
             }
         });
         return clicks;

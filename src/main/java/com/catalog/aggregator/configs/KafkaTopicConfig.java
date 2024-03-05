@@ -10,6 +10,9 @@ import org.springframework.kafka.core.KafkaAdmin;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.catalog.aggregator.utils.Constants.PRODUCT_USER_CLICK_ANALYTIC_OUTPUT_TOPIC;
+import static com.catalog.aggregator.utils.Constants.PRODUCT_USER_CLICK_TOPIC;
+
 @Configuration
 public class KafkaTopicConfig {
 
@@ -25,11 +28,11 @@ public class KafkaTopicConfig {
 
     @Bean
     public NewTopic userClickTopic() {
-        return new NewTopic("userClick", 1, (short) 1);
+        return new NewTopic(PRODUCT_USER_CLICK_TOPIC, 1, (short) 1);
     }
 
     @Bean
     public NewTopic userClickStoreTopic() {
-        return new NewTopic("userClick-stores", 1, (short) 1);
+        return new NewTopic(PRODUCT_USER_CLICK_ANALYTIC_OUTPUT_TOPIC, 1, (short) 1);
     }
 }
