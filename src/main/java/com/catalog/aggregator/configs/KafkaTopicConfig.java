@@ -27,4 +27,9 @@ public class KafkaTopicConfig {
     public NewTopic userClickTopic() {
         return new NewTopic("userClick", 1, (short) 1);
     }
+
+    @Bean
+    public NewTopic userClickStoreTopic() {
+        return new NewTopic("userClick-stores", 1, (short) 1);
+    }
 }
