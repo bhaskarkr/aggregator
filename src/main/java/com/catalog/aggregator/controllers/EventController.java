@@ -26,6 +26,6 @@ public class EventController {
         if(ValidationUtils.isInValidId(productId) || ValidationUtils.isInValidId(userId))
             throw new BadRequestException();
         kafkaTemplate.send(PRODUCT_USER_CLICK_TOPIC, EventUtils.getProductUserEventKey(productId, userId), userId + " clicked  on " + productId);
-        return "Total click : " + count;
+        return "Total click : " + ++count;
     }
 }
