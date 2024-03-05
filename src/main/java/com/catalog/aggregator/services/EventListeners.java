@@ -12,11 +12,11 @@ import static com.catalog.aggregator.utils.Constants.PRODUCT_USER_CLICK_TOPIC;
 public class EventListeners {
     @KafkaListener(topics = PRODUCT_USER_CLICK_TOPIC, groupId = "event_processor")
     public void listenUserClick(String message) {
-        log.info("Received Message PRODUCT_USER_CLICK_TOPIC : " + message);
+        log.info("Received Message in PRODUCT_USER_CLICK_TOPIC : " + message);
     }
 
     @KafkaListener(topics = PRODUCT_USER_CLICK_ANALYTIC_OUTPUT_TOPIC, groupId = "event_processor")
     public void listenUserClickStore(String message) {
-        log.info("listenUserClickStore - Received Message in group event_processor: " + message);
+        log.info("Received Message in PRODUCT_USER_CLICK_ANALYTIC_OUTPUT_TOPIC : " + message);
     }
 }
